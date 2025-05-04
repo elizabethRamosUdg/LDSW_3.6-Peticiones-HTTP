@@ -120,7 +120,7 @@ class _HomePageState extends State<HomePage> {
                 _responseText,
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 12, // Tamaño
+                  fontSize: 15, // Tamaño
                   fontWeight: FontWeight.bold, // Para hacerlo más grueso
                 ),
               ),
