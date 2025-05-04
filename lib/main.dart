@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 void main() {
   runApp(const MyApp());
@@ -16,8 +18,9 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       home: const HomePage(
-        titulo: '3.5. Home screen',
-        textoBienvenida: 'Bienvenido!!',
+        titulo: '3.6. HTTP Peticion',
+        textoBienvenida:
+            'A continuacion se mostrara el resultado de una peticion HTTP',
       ),
     );
   }
@@ -39,6 +42,28 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String _responseText = "";
+  String url = "https://pokeapi.co/api/v2/pokemon/pikachu";
+
+  Future<void> fetchData() async {
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      setState(() {
+        _responseText = json.decode(response.body).toString();
+      });
+    } else {
+      setState(() {
+        _responseText = "Error en la petición: ${response.statusCode}";
+      });
+    }
+  }
+
+  void cleanText() {
+    setState(() {
+      _responseText = "";
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,6 +91,27 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 30, // Tamaño
+                  fontWeight: FontWeight.bold, // Para hacerlo más grueso
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton(
+                    onPressed: fetchData,
+                    child: Text('Hacer petición'),
+                  ),
+                  ElevatedButton(
+                    onPressed: cleanText,
+                    child: Text('Limpiar datos'),
+                  ),
+                ],
+              ),
+              Text(
+                _responseText,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 12, // Tamaño
                   fontWeight: FontWeight.bold, // Para hacerlo más grueso
                 ),
               ),
