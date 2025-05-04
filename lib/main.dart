@@ -43,13 +43,22 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String _responseText = "";
-  String url = "https://pokeapi.co/api/v2/pokemon/pikachu";
+  String url = "https://pokeapi.co/api/v2/pokemon";
 
   Future<void> fetchData() async {
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+
+      // Extraer los tipos correctamente
+      final List<String> results =
+          data['results'].map<String>((r) => r['name'].toString()).toList();
+
+      // Convertir la lista en un String
+      final String typesAsString = results.join(',\n');
+
       setState(() {
-        _responseText = json.decode(response.body).toString();
+        _responseText = typesAsString.toString();
       });
     } else {
       setState(() {
